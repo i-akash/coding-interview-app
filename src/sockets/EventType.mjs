@@ -17,6 +17,7 @@ export const NEW_PROBLEM = 'new_problem'
 export const ALL_SOLUTION = 'all_solution'
 export const NEW_SOLUTION = 'new_solution'
 export const RUN_SOLUTION = 'run_solution'
+export const CLEAR_ALL_SOLUTION = 'clear_all_solution'
 
 
 

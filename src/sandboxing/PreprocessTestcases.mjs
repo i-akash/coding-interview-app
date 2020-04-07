@@ -12,18 +12,23 @@ export const preprocess = (jsonInputFormat = {}, testCases = []) => {
                     maxArrayLength = parseInt(input[iter++])
                     context[param] = maxArrayLength
                     break;
-                case "[float]":
-                    context[param] = []
-                    for (let index = iter; index < iter + maxArrayLength; index++) {
-                        context[param].push(parseFloat(input[index]))
-                    }
-                    iter = iter + maxArrayLength
-                    break
-
+                case "float":
+                    context[param] = parseFloat(input[iter++])
+                    break;
+                case "string":
+                    context[param] = input[iter++]
+                    break;
                 case "[int]":
                     context[param] = []
                     for (let index = iter; index < iter + maxArrayLength; index++) {
                         context[param].push(parseInt(input[index]))
+                    }
+                    iter = iter + maxArrayLength
+                    break
+                case "[float]":
+                    context[param] = []
+                    for (let index = iter; index < iter + maxArrayLength; index++) {
+                        context[param].push(parseFloat(input[index]))
                     }
                     iter = iter + maxArrayLength
                     break

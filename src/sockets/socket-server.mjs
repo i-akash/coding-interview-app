@@ -20,6 +20,7 @@ import {
     CONNECT
 } from './EventType.mjs'
 import { EvaluateSourceCode } from '../sandboxing/EvaluateSourceCode.mjs'
+import { CLEAR_ALL_SOLUTION } from './EventType.mjs'
 
 // chat app
 
@@ -210,7 +211,12 @@ SocketServer.prototype.onRunSolution = function (socket) {
     })
 }
 
-
+// SocketServer.prototype.onClearAllSolution = function (socket) {
+//     socket.on(CLEAR_ALL_SOLUTION, (room) => {
+//         this.redisClient.
+//         new EvaluateSourceCode(payload).runCode(callback)
+//     })
+// }
 
 SocketServer.prototype.broadcastToRoom = function (event, room, message) {
     this.chatApp.in(room).emit(event, message)
