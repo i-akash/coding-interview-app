@@ -1,5 +1,5 @@
 import io from 'socket.io'
-import { promisify, log } from 'util'
+import { promisify } from 'util'
 import redis from 'redis'
 import {
     ALL_ROOM,
@@ -11,16 +11,17 @@ import {
     DISCONNECTING,
     NEW_MESSAGE,
     ALL_MESSAGE,
+    REMOVE_ALL_MESSAGES,
     NEW_PROBLEM,
     ALL_PROBLEM,
     NEW_SOLUTION,
     RUN_SOLUTION,
     ALL_SOLUTION,
+    REMOVE_ALL_SOLUTION,
     MESSAGE_TYPING,
     CONNECT
 } from './EventType.mjs'
 import { EvaluateSourceCode } from '../sandboxing/EvaluateSourceCode.mjs'
-import { CLEAR_ALL_SOLUTION } from './EventType.mjs'
 
 // chat app
 
@@ -53,6 +54,7 @@ SocketServer.prototype.listen = function () {
         this.onTypingMessage(socket)
         this.onNewMessage(socket)
         this.getAllMessages(socket)
+        this.removeAllMessages(socket)
 
         this.onAddProblem(socket)
         this.getAllProblems(socket)
@@ -60,6 +62,7 @@ SocketServer.prototype.listen = function () {
         this.onAddSolution(socket)
         this.getAllSolution(socket)
         this.onRunSolution(socket)
+        this.onRemoveAllSolution(socket)
 
         this.onJoinRoom(socket)
         this.onLeaveRoom(socket)
@@ -162,6 +165,19 @@ SocketServer.prototype.getAllMessages = function (socket) {
     })
 }
 
+SocketServer.prototype.removeAllMessages = function (socket) {
+    socket.on(REMOVE_ALL_MESSAGES, (room, callback) => {
+        this.redisClient.del(`${room}:messages`, (error, reply) => {
+            if (error) {
+                console.log("REMOVE ALL SMS ERROR : ", error.message);
+                callback(error)
+            }
+            callback()
+            this.broadcastToRoom(REMOVE_ALL_MESSAGES, room)
+        })
+    })
+}
+
 SocketServer.prototype.onAddProblem = function (socket) {
     socket.on(NEW_PROBLEM, ({ room, payload }, ackCallback) => {
         payload.timeStamp = new Date()
@@ -200,7 +216,7 @@ SocketServer.prototype.getAllSolution = function (socket) {
                 callback([])
             }
             let parsedSolutions = solutions.map(solution => JSON.parse(solution))
-            callback(parsedSolutions)
+            callback(parsedSolutions.reverse())
         })
     })
 }
@@ -211,12 +227,18 @@ SocketServer.prototype.onRunSolution = function (socket) {
     })
 }
 
-// SocketServer.prototype.onClearAllSolution = function (socket) {
-//     socket.on(CLEAR_ALL_SOLUTION, (room) => {
-//         this.redisClient.
-//         new EvaluateSourceCode(payload).runCode(callback)
-//     })
-// }
+SocketServer.prototype.onRemoveAllSolution = function (socket) {
+    socket.on(REMOVE_ALL_SOLUTION, (room, callback) => {
+        this.redisClient.del(`${room}:solutions`, (err, reply) => {
+            if (err) {
+                console.log("REMOVE ALL SOLUTION ERROR : ", err.message);
+                callback(err)
+            }
+            callback()
+            this.broadcastToRoom(REMOVE_ALL_SOLUTION, room)
+        })
+    })
+}
 
 SocketServer.prototype.broadcastToRoom = function (event, room, message) {
     this.chatApp.in(room).emit(event, message)

@@ -10,6 +10,7 @@ export const DISCONNECTING = 'disconnecting'
 export const ALL_MESSAGE = 'all_message'
 export const NEW_MESSAGE = 'new_message'
 export const MESSAGE_TYPING = 'message_typing'
+export const REMOVE_ALL_MESSAGES = 'remove_all_messages'
 
 export const ALL_PROBLEM = 'all_problem'
 export const NEW_PROBLEM = 'new_problem'
@@ -17,7 +18,7 @@ export const NEW_PROBLEM = 'new_problem'
 export const ALL_SOLUTION = 'all_solution'
 export const NEW_SOLUTION = 'new_solution'
 export const RUN_SOLUTION = 'run_solution'
-export const CLEAR_ALL_SOLUTION = 'clear_all_solution'
+export const REMOVE_ALL_SOLUTION = 'remove_all_solution'
 
 
 
