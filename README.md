@@ -1,10 +1,9 @@
-# Coding Interview Server 
+# Coding Interview Server
 
 #### prerequisite
 
-* redis db server
+- redis db server
 
 #### Instruction
 
-* will be updated soon
-
+- will be updated soon
