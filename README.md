@@ -6,5 +6,5 @@
 
 #### Instruction
 
-* coming soon
+* will be updated soon
 
